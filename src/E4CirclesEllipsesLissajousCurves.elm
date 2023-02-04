@@ -33,7 +33,7 @@ init () =
       , yAngle = 0
       , xSpeed = turns 0.9745
       , ySpeed = turns 0.791
-      , isPaused = True
+      , isPaused = False
       }
     , Cmd.none
     )
