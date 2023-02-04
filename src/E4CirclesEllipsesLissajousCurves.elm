@@ -20,8 +20,7 @@ main =
 
 
 type alias Model =
-    { xSpeed : Float
-    , ySpeed : Float
+    { obj : Object
     , xRadius : Float
     , yRadius : Float
     , isPaused : Bool
@@ -36,8 +35,10 @@ init () =
         elapsed =
             0
     in
-    ( { xSpeed = turns 0.5745
-      , ySpeed = turns 0.691
+    ( { obj =
+            { xSpeed = turns 0.5745
+            , ySpeed = turns 0.691
+            }
       , xRadius = 150
       , yRadius = 200
       , isPaused = False
@@ -48,11 +49,15 @@ init () =
     )
 
 
+type alias Object =
+    { xSpeed : Float
+    , ySpeed : Float
+    }
+
+
 type Msg
     = Tick Float
     | TogglePause
-    | XSpeedChanged String
-    | YSpeedChanged String
     | ElapsedChanged String
 
 
@@ -81,22 +86,6 @@ update msg model =
 
         TogglePause ->
             ( { model | isPaused = not model.isPaused }, Cmd.none )
-
-        XSpeedChanged str ->
-            case String.toFloat str of
-                Just xSpeed ->
-                    ( { model | xSpeed = xSpeed }, Cmd.none )
-
-                Nothing ->
-                    ( model, Cmd.none )
-
-        YSpeedChanged str ->
-            case String.toFloat str of
-                Just ySpeed ->
-                    ( { model | ySpeed = ySpeed }, Cmd.none )
-
-                Nothing ->
-                    ( model, Cmd.none )
 
         ElapsedChanged str ->
             ( { model
@@ -168,34 +157,7 @@ viewConfigPanel model =
                 , onInput ElapsedChanged
                 ]
                 []
-            , viewFloatInput "xSpeed: " model.xSpeed XSpeedChanged
-            , viewFloatInput "ySpeed: " model.ySpeed YSpeedChanged
             ]
-        ]
-
-
-fdivBy by x =
-    x / by
-
-
-roundUpto n f =
-    f
-        * (10 ^ n)
-        |> round
-        |> toFloat
-        |> fdivBy (10 ^ n)
-
-
-viewFloatInput labelText float msg =
-    label []
-        [ text labelText
-        , input
-            [ type_ "number"
-            , value (String.fromFloat float)
-            , onInput msg
-            , step "0.01"
-            ]
-            []
         ]
 
 
@@ -227,27 +189,32 @@ viewSvg model =
         , fill "white"
         ]
         [ g [ style "transform" "translate(50%,50%)" ]
-            [ let
-                xAngle =
-                    model.xSpeed * model.elapsed
-
-                yAngle =
-                    model.ySpeed * model.elapsed
-
-                x =
-                    cos xAngle * model.xRadius
-
-                y =
-                    sin yAngle * model.yRadius
-              in
-              circle
-                [ cx (String.fromFloat x)
-                , cy (String.fromFloat y)
-                , r "1%"
-                ]
-                []
+            [ viewObject model model.obj
             ]
         ]
+
+
+viewObject : Model -> Object -> Svg.Svg msg
+viewObject model obj =
+    let
+        xAngle =
+            obj.xSpeed * model.elapsed
+
+        yAngle =
+            obj.ySpeed * model.elapsed
+
+        x =
+            cos xAngle * model.xRadius
+
+        y =
+            sin yAngle * model.yRadius
+    in
+    circle
+        [ cx (String.fromFloat x)
+        , cy (String.fromFloat y)
+        , r "1%"
+        ]
+        []
 
 
 globalStyles =
