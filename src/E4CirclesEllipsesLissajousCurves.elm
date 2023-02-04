@@ -24,6 +24,7 @@ type alias Model =
     , xSpeed : Float
     , ySpeed : Float
     , isPaused : Bool
+    , elapsed : Float
     }
 
 
@@ -34,6 +35,7 @@ init () =
       , xSpeed = turns 0.9745
       , ySpeed = turns 0.791
       , isPaused = False
+      , elapsed = 0
       }
     , Cmd.none
     )
@@ -69,6 +71,7 @@ update msg model =
                 { model
                     | xAngle = model.xAngle + (model.xSpeed * ds)
                     , yAngle = model.yAngle + (model.ySpeed * ds)
+                    , elapsed = model.elapsed + ds
                 }
             , Cmd.none
             )
