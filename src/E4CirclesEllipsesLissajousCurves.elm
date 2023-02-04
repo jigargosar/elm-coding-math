@@ -41,7 +41,7 @@ init () =
 
 type Msg
     = Tick Float
-    | Toggle
+    | TogglePause
 
 
 subscriptions : Model -> Sub Msg
@@ -70,7 +70,7 @@ update msg model =
             , Cmd.none
             )
 
-        Toggle ->
+        TogglePause ->
             ( { model | isPaused = not model.isPaused }, Cmd.none )
 
 
@@ -82,33 +82,54 @@ view model =
         , style "height" "100vh"
         ]
         [ div [ style "position" "fixed" ]
-            [ button [ onClick Toggle ] [ text "toggle" ] ]
-        , svg
-            [ style "background-color" "black"
-            , style "width" "100%"
-            , style "height" "100%"
-            , fill "white"
-            ]
-            [ g [ style "transform" "translate(50%,50%)" ]
-                [ let
-                    xRadius =
-                        150
+            [ viewPauseButton model.isPaused ]
+        , viewSvg model
+        ]
 
-                    yRadius =
-                        200
 
-                    x =
-                        cos model.xAngle * xRadius
+viewPauseButton : Bool -> Html Msg
+viewPauseButton isPaused =
+    button [ onClick TogglePause ]
+        [ let
+            txt =
+                case isPaused of
+                    True ->
+                        "Play"
 
-                    y =
-                        sin model.yAngle * yRadius
-                  in
-                  circle
-                    [ cx (String.fromFloat x)
-                    , cy (String.fromFloat y)
-                    , r "1%"
-                    ]
-                    []
+                    False ->
+                        "Pause"
+          in
+          text txt
+        ]
+
+
+viewSvg : Model -> Html Msg
+viewSvg model =
+    svg
+        [ style "background-color" "black"
+        , style "width" "100%"
+        , style "height" "100%"
+        , fill "white"
+        ]
+        [ g [ style "transform" "translate(50%,50%)" ]
+            [ let
+                xRadius =
+                    150
+
+                yRadius =
+                    200
+
+                x =
+                    cos model.xAngle * xRadius
+
+                y =
+                    sin model.yAngle * yRadius
+              in
+              circle
+                [ cx (String.fromFloat x)
+                , cy (String.fromFloat y)
+                , r "1%"
                 ]
+                []
             ]
         ]
