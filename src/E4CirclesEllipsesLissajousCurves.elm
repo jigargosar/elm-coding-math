@@ -8,7 +8,12 @@ import Svg.Attributes exposing (fill, r)
 
 
 main =
-    Browser.sandbox { init = init, update = update, view = view }
+    Browser.element
+        { init = init
+        , update = update
+        , subscriptions = subscriptions
+        , view = view
+        }
 
 
 type alias Model =
@@ -16,20 +21,25 @@ type alias Model =
     }
 
 
-init : Model
-init =
-    { angle = 0 }
+init : () -> ( Model, Cmd Msg )
+init () =
+    ( { angle = 0 }, Cmd.none )
 
 
 type Msg
     = Msg
 
 
-update : Msg -> Model -> Model
+subscriptions : Model -> Sub Msg
+subscriptions _ =
+    Sub.batch []
+
+
+update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
         Msg ->
-            model
+            ( model, Cmd.none )
 
 
 view : Model -> Html Msg
