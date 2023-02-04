@@ -19,9 +19,7 @@ main =
 
 
 type alias Model =
-    { xAngle : Float
-    , yAngle : Float
-    , xSpeed : Float
+    { xSpeed : Float
     , ySpeed : Float
     , isPaused : Bool
     , elapsed : Float
@@ -30,9 +28,7 @@ type alias Model =
 
 init : () -> ( Model, Cmd Msg )
 init () =
-    ( { xAngle = 0
-      , yAngle = 0
-      , xSpeed = turns 0.9745
+    ( { xSpeed = turns 0.9745
       , ySpeed = turns 0.791
       , isPaused = False
       , elapsed = 0
@@ -44,7 +40,6 @@ init () =
 type Msg
     = Tick Float
     | TogglePause
-    | XAngleChanged String
     | XSpeedChanged String
     | YSpeedChanged String
 
@@ -68,24 +63,12 @@ update msg model =
                 model
 
               else
-                { model
-                    | xAngle = model.xAngle + (model.xSpeed * ds)
-                    , yAngle = model.yAngle + (model.ySpeed * ds)
-                    , elapsed = model.elapsed + ds
-                }
+                { model | elapsed = model.elapsed + ds }
             , Cmd.none
             )
 
         TogglePause ->
             ( { model | isPaused = not model.isPaused }, Cmd.none )
-
-        XAngleChanged str ->
-            case String.toFloat str of
-                Just xAngle ->
-                    ( { model | xAngle = xAngle }, Cmd.none )
-
-                Nothing ->
-                    ( model, Cmd.none )
 
         XSpeedChanged str ->
             case String.toFloat str of
@@ -122,7 +105,6 @@ view model =
                 , style "padding" "10px"
                 ]
                 [ viewPauseButton model.isPaused
-                , viewFloatInput "xAngle: " model.xAngle XAngleChanged
                 , viewFloatInput "xSpeed: " model.xSpeed XSpeedChanged
                 , viewFloatInput "ySpeed: " model.ySpeed YSpeedChanged
                 ]
@@ -179,11 +161,17 @@ viewSvg model =
                 yRadius =
                     200
 
+                xAngle =
+                    model.xSpeed * model.elapsed
+
+                yAngle =
+                    model.ySpeed * model.elapsed
+
                 x =
-                    cos model.xAngle * xRadius
+                    cos xAngle * xRadius
 
                 y =
-                    sin model.yAngle * yRadius
+                    sin yAngle * yRadius
               in
               circle
                 [ cx (String.fromFloat x)
