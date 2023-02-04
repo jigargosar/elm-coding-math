@@ -24,15 +24,21 @@ type alias Model =
     , ySpeed : Float
     , isPaused : Bool
     , elapsed : Float
+    , elapsedBacking : String
     }
 
 
 init : () -> ( Model, Cmd Msg )
 init () =
+    let
+        elapsed =
+            0
+    in
     ( { xSpeed = turns 0.9745
       , ySpeed = turns 0.791
-      , isPaused = False
-      , elapsed = 0
+      , isPaused = True
+      , elapsed = elapsed
+      , elapsedBacking = String.fromFloat elapsed
       }
     , Cmd.none
     )
@@ -43,6 +49,7 @@ type Msg
     | TogglePause
     | XSpeedChanged String
     | YSpeedChanged String
+    | ElapsedChanged String
 
 
 subscriptions : Model -> Sub Msg
@@ -87,6 +94,21 @@ update msg model =
                 Nothing ->
                     ( model, Cmd.none )
 
+        ElapsedChanged str ->
+            ( { model
+                | elapsedBacking = str
+                , isPaused = True
+                , elapsed =
+                    case String.toFloat str of
+                        Just elapsed ->
+                            elapsed
+
+                        Nothing ->
+                            model.elapsed
+              }
+            , Cmd.none
+            )
+
 
 view : Model -> Html Msg
 view model =
@@ -107,6 +129,7 @@ viewConfigPanel : Model -> Html Msg
 viewConfigPanel model =
     div
         [ style "position" "fixed"
+        , style "opacity" "0.8"
         ]
         [ div
             [ style "display" "flex"
@@ -127,6 +150,15 @@ viewConfigPanel model =
                     ]
                     [ text elapsedString ]
                 ]
+            , input
+                [ type_ "range"
+                , step "any"
+                , Html.Attributes.min "0"
+                , Html.Attributes.max "10"
+                , value model.elapsedBacking
+                , onInput ElapsedChanged
+                ]
+                []
             , viewFloatInput "xSpeed: " model.xSpeed XSpeedChanged
             , viewFloatInput "ySpeed: " model.ySpeed YSpeedChanged
             ]
