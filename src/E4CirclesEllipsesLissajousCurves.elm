@@ -133,13 +133,10 @@ view model =
         ]
         [ globalStyles
         , viewConfigPanel model
-            |> hideForNow
+
+        --|> always (text "")
         , viewSvg model
         ]
-
-
-hideForNow _ =
-    text ""
 
 
 viewConfigPanel : Model -> Html Msg
@@ -202,7 +199,7 @@ viewPauseButton isPaused =
 viewSvg : Model -> Html Msg
 viewSvg model =
     svg
-        [ viewBox "-250 -250 500 500"
+        [ viewBox "-300 -300 600 600"
         , style "background-color" "#111"
         , style "max-width" "100%"
         , style "max-height" "100%"
@@ -231,7 +228,6 @@ viewObject model obj =
     circle
         [ cx (String.fromFloat x)
         , cy (String.fromFloat y)
-        , r "0.5%"
         , r "5"
         ]
         []
