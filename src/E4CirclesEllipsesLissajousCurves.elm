@@ -89,7 +89,7 @@ view model =
               circle
                 [ cx (String.fromFloat x)
                 , cy (String.fromFloat y)
-                , r "10"
+                , r "1%"
                 ]
                 []
             ]
