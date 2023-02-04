@@ -3,8 +3,8 @@ module E4CirclesEllipsesLissajousCurves exposing (main)
 import Browser
 import Browser.Events
 import Html exposing (Html, button, div, input, label, text)
-import Html.Attributes exposing (style, type_, value)
-import Html.Events exposing (onClick)
+import Html.Attributes exposing (step, style, type_, value)
+import Html.Events exposing (onClick, onInput)
 import Svg exposing (circle, foreignObject, g, svg)
 import Svg.Attributes exposing (cx, cy, fill, r)
 
@@ -42,6 +42,7 @@ init () =
 type Msg
     = Tick Float
     | TogglePause
+    | XAngleChanged String
 
 
 subscriptions : Model -> Sub Msg
@@ -73,6 +74,14 @@ update msg model =
         TogglePause ->
             ( { model | isPaused = not model.isPaused }, Cmd.none )
 
+        XAngleChanged str ->
+            case String.toFloat str of
+                Just xAngle ->
+                    ( { model | xAngle = xAngle }, Cmd.none )
+
+                Nothing ->
+                    ( model, Cmd.none )
+
 
 view : Model -> Html Msg
 view model =
@@ -88,7 +97,16 @@ view model =
             , style "gap" "10px"
             ]
             [ viewPauseButton model.isPaused
-            , label [] [ text "num", input [ type_ "number", value "10" ] [] ]
+            , label []
+                [ text "xAngle: "
+                , input
+                    [ type_ "number"
+                    , value (String.fromFloat model.xAngle)
+                    , onInput XAngleChanged
+                    , step "0.01"
+                    ]
+                    []
+                ]
             ]
         , viewSvg model
         ]
@@ -96,7 +114,10 @@ view model =
 
 viewPauseButton : Bool -> Html Msg
 viewPauseButton isPaused =
-    button [ onClick TogglePause ]
+    button
+        [ onClick TogglePause
+        , style "min-width" "10ch"
+        ]
         [ let
             txt =
                 case isPaused of
