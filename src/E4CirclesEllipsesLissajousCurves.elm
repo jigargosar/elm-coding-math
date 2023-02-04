@@ -22,6 +22,8 @@ main =
 type alias Model =
     { xSpeed : Float
     , ySpeed : Float
+    , xRadius : Float
+    , yRadius : Float
     , isPaused : Bool
     , elapsed : Float
     , elapsedBacking : String
@@ -34,9 +36,11 @@ init () =
         elapsed =
             0
     in
-    ( { xSpeed = turns 0.9745
-      , ySpeed = turns 0.791
-      , isPaused = True
+    ( { xSpeed = turns 0.5745
+      , ySpeed = turns 0.691
+      , xRadius = 150
+      , yRadius = 200
+      , isPaused = False
       , elapsed = elapsed
       , elapsedBacking = String.fromFloat elapsed
       }
@@ -121,8 +125,13 @@ view model =
         ]
         [ globalStyles
         , viewConfigPanel model
+            |> hideForNow
         , viewSvg model
         ]
+
+
+hideForNow _ =
+    text ""
 
 
 viewConfigPanel : Model -> Html Msg
@@ -219,12 +228,6 @@ viewSvg model =
         ]
         [ g [ style "transform" "translate(50%,50%)" ]
             [ let
-                xRadius =
-                    150
-
-                yRadius =
-                    200
-
                 xAngle =
                     model.xSpeed * model.elapsed
 
@@ -232,10 +235,10 @@ viewSvg model =
                     model.ySpeed * model.elapsed
 
                 x =
-                    cos xAngle * xRadius
+                    cos xAngle * model.xRadius
 
                 y =
-                    sin yAngle * yRadius
+                    sin yAngle * model.yRadius
               in
               circle
                 [ cx (String.fromFloat x)
