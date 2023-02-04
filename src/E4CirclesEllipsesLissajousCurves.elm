@@ -39,7 +39,7 @@ init () =
 
         objects : List Object
         objects =
-            Random.step (Random.list 0 randomObject) (Random.initialSeed 0)
+            Random.step (Random.list 50 randomObject) (Random.initialSeed 0)
                 |> Tuple.first
     in
     ( { obj =
