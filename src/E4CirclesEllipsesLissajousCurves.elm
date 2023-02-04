@@ -1,10 +1,11 @@
 module E4CirclesEllipsesLissajousCurves exposing (main)
 
 import Browser
+import Browser.Events
 import Html exposing (Html)
 import Html.Attributes exposing (style)
 import Svg exposing (circle, g, svg)
-import Svg.Attributes exposing (fill, r)
+import Svg.Attributes exposing (cx, cy, fill, r)
 
 
 main =
@@ -17,33 +18,51 @@ main =
 
 
 type alias Model =
-    { angle : Float
+    { xAngle : Float
+    , yAngle : Float
     }
 
 
 init : () -> ( Model, Cmd Msg )
 init () =
-    ( { angle = 0 }, Cmd.none )
+    ( { xAngle = 0, yAngle = 0 }, Cmd.none )
 
 
 type Msg
-    = Msg
+    = Tick Float
 
 
 subscriptions : Model -> Sub Msg
 subscriptions _ =
-    Sub.batch []
+    Sub.batch
+        [ Browser.Events.onAnimationFrameDelta Tick
+        ]
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
-        Msg ->
-            ( model, Cmd.none )
+        Tick millis ->
+            let
+                ds =
+                    millis / 1000
+
+                xSpeed =
+                    turns 0.9745
+
+                ySpeed =
+                    turns 0.791
+            in
+            ( { model
+                | xAngle = model.xAngle + (xSpeed * ds)
+                , yAngle = model.yAngle + (ySpeed * ds)
+              }
+            , Cmd.none
+            )
 
 
 view : Model -> Html Msg
-view _ =
+view model =
     svg
         [ style "background-color" "black"
         , style "display" "flex"
@@ -52,6 +71,24 @@ view _ =
         , fill "white"
         ]
         [ g [ style "transform" "translate(50%,50%)" ]
-            [ circle [ r "100" ] []
+            [ let
+                xRadius =
+                    150
+
+                yRadius =
+                    200
+
+                x =
+                    cos model.xAngle * xRadius
+
+                y =
+                    sin model.yAngle * yRadius
+              in
+              circle
+                [ cx (String.fromFloat x)
+                , cy (String.fromFloat y)
+                , r "10"
+                ]
+                []
             ]
         ]
