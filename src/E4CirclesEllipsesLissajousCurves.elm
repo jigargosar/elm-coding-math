@@ -4,6 +4,7 @@ import Browser
 import Browser.Events
 import Html exposing (Html, button, div, text)
 import Html.Attributes exposing (style)
+import Html.Events exposing (onClick)
 import Svg exposing (circle, foreignObject, g, svg)
 import Svg.Attributes exposing (cx, cy, fill, r)
 
@@ -80,10 +81,8 @@ view model =
         , style "width" "100vw"
         , style "height" "100vh"
         ]
-        [ div
-            [ style "position" "fixed"
-            ]
-            [ button [] [ text "toggle" ] ]
+        [ div [ style "position" "fixed" ]
+            [ button [ onClick Toggle ] [ text "toggle" ] ]
         , svg
             [ style "background-color" "black"
             , style "width" "100%"
