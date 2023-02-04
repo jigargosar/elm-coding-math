@@ -70,7 +70,7 @@ randomObject =
 
 
 randomSpeed =
-    Random.float 0.1 0.9
+    Random.float 0.2 0.8
         |> Random.map turns
 
 
