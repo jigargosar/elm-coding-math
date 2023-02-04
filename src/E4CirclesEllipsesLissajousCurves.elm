@@ -8,7 +8,7 @@ import Html.Events exposing (onClick, onInput)
 import Random
 import Round
 import Svg exposing (circle, g, svg)
-import Svg.Attributes exposing (cx, cy, fill, r)
+import Svg.Attributes exposing (cx, cy, fill, r, transform, viewBox)
 
 
 main =
@@ -39,7 +39,7 @@ init () =
 
         objects : List Object
         objects =
-            Random.step (Random.list 50 randomObject) (Random.initialSeed 0)
+            Random.step (Random.list 0 randomObject) (Random.initialSeed 0)
                 |> Tuple.first
     in
     ( { obj =
@@ -47,8 +47,8 @@ init () =
             , ySpeed = turns 0.691
             }
       , objects = objects
-      , xRadius = 150
-      , yRadius = 200
+      , xRadius = 200
+      , yRadius = 250
       , isPaused = False
       , elapsed = elapsed
       , elapsedBacking = String.fromFloat elapsed
@@ -202,16 +202,15 @@ viewPauseButton isPaused =
 viewSvg : Model -> Html Msg
 viewSvg model =
     svg
-        [ style "background-color" "black"
-        , style "width" "100%"
-        , style "height" "100%"
+        [ viewBox "-250 -250 500 500"
+        , style "background-color" "#111"
+        , style "max-width" "100%"
+        , style "max-height" "100%"
         , fill "white"
         ]
-        [ g [ style "transform" "translate(50%,50%)" ]
-            (viewObject model model.obj
-                :: List.map (viewObject model) model.objects
-            )
-        ]
+        (viewObject model model.obj
+            :: List.map (viewObject model) model.objects
+        )
 
 
 viewObject : Model -> Object -> Svg.Svg msg
@@ -232,7 +231,8 @@ viewObject model obj =
     circle
         [ cx (String.fromFloat x)
         , cy (String.fromFloat y)
-        , r "1%"
+        , r "0.5%"
+        , r "5"
         ]
         []
 
