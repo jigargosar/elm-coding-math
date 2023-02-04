@@ -2,9 +2,10 @@ module E4CirclesEllipsesLissajousCurves exposing (main)
 
 import Browser
 import Browser.Events
-import Html exposing (Html, button, div, input, label, text)
+import Html exposing (Html, button, div, input, label, node, span, text)
 import Html.Attributes exposing (step, style, type_, value)
 import Html.Events exposing (onClick, onInput)
+import Round
 import Svg exposing (circle, g, svg)
 import Svg.Attributes exposing (cx, cy, fill, r)
 
@@ -93,24 +94,55 @@ view model =
         [ style "display" "grid"
         , style "width" "100vw"
         , style "height" "100vh"
+        , style "font-family" "monospace"
+        , style "font-size" "1rem"
         ]
-        [ div
-            [ style "position" "fixed"
-            , style "color" "white"
-            ]
-            [ div
-                [ style "display" "flex"
-                , style "flex-direction" "column"
-                , style "gap" "10px"
-                , style "padding" "10px"
-                ]
-                [ viewPauseButton model.isPaused
-                , viewFloatInput "xSpeed: " model.xSpeed XSpeedChanged
-                , viewFloatInput "ySpeed: " model.ySpeed YSpeedChanged
-                ]
-            ]
+        [ globalStyles
+        , viewConfigPanel model
         , viewSvg model
         ]
+
+
+viewConfigPanel : Model -> Html Msg
+viewConfigPanel model =
+    div
+        [ style "position" "fixed"
+        ]
+        [ div
+            [ style "display" "flex"
+            , style "flex-direction" "column"
+            , style "gap" "10px"
+            , style "padding" "10px"
+            ]
+            [ viewPauseButton model.isPaused
+            , let
+                elapsedString =
+                    Round.round 2 model.elapsed ++ "s"
+              in
+              label []
+                [ text "Elapsed: "
+                , span
+                    [ style "min-width" "10ch"
+                    , style "display" "inline-block"
+                    ]
+                    [ text elapsedString ]
+                ]
+            , viewFloatInput "xSpeed: " model.xSpeed XSpeedChanged
+            , viewFloatInput "ySpeed: " model.ySpeed YSpeedChanged
+            ]
+        ]
+
+
+fdivBy by x =
+    x / by
+
+
+roundUpto n f =
+    f
+        * (10 ^ n)
+        |> round
+        |> toFloat
+        |> fdivBy (10 ^ n)
 
 
 viewFloatInput labelText float msg =
@@ -181,3 +213,25 @@ viewSvg model =
                 []
             ]
         ]
+
+
+globalStyles =
+    node "style" [] [ text """
+:root {
+    font-family: monospace;
+    font-size: 16px;
+    background-color: black;
+    color: white;
+}
+* {
+    box-sizing: border-box;
+}
+input, button {
+    font-family: inherit;
+    font-size: 100%;
+    background-color: #222;
+    color: inherit;
+    border: none;
+    padding: 0.5rem;
+}
+""" ]
