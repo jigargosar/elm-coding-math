@@ -22,6 +22,7 @@ type alias Model =
     , yAngle : Float
     , xSpeed : Float
     , ySpeed : Float
+    , isPaused : Bool
     }
 
 
@@ -31,6 +32,7 @@ init () =
       , yAngle = 0
       , xSpeed = turns 0.9745
       , ySpeed = turns 0.791
+      , isPaused = True
       }
     , Cmd.none
     )
@@ -38,6 +40,7 @@ init () =
 
 type Msg
     = Tick Float
+    | Toggle
 
 
 subscriptions : Model -> Sub Msg
@@ -55,12 +58,19 @@ update msg model =
                 ds =
                     millis / 1000
             in
-            ( { model
-                | xAngle = model.xAngle + (model.xSpeed * ds)
-                , yAngle = model.yAngle + (model.ySpeed * ds)
-              }
+            ( if model.isPaused then
+                model
+
+              else
+                { model
+                    | xAngle = model.xAngle + (model.xSpeed * ds)
+                    , yAngle = model.yAngle + (model.ySpeed * ds)
+                }
             , Cmd.none
             )
+
+        Toggle ->
+            ( { model | isPaused = not model.isPaused }, Cmd.none )
 
 
 view : Model -> Html Msg
