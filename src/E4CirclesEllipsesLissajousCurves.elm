@@ -39,7 +39,7 @@ init () =
 
         objects : List Object
         objects =
-            Random.step (Random.list 50 randomObject) (Random.initialSeed 0)
+            Random.step (Random.list 20 randomObject) (Random.initialSeed 0)
                 |> Tuple.first
     in
     ( { obj =
@@ -228,7 +228,7 @@ viewObject model obj =
     circle
         [ cx (String.fromFloat x)
         , cy (String.fromFloat y)
-        , r "5"
+        , r "3"
         ]
         []
 
