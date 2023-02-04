@@ -5,7 +5,7 @@ import Browser.Events
 import Html exposing (Html, button, div, input, label, text)
 import Html.Attributes exposing (step, style, type_, value)
 import Html.Events exposing (onClick, onInput)
-import Svg exposing (circle, foreignObject, g, svg)
+import Svg exposing (circle, g, svg)
 import Svg.Attributes exposing (cx, cy, fill, r)
 
 
@@ -102,29 +102,34 @@ view model =
         [ div
             [ style "position" "fixed"
             , style "color" "white"
-            , style "display" "flex"
-            , style "gap" "10px"
             ]
-            [ viewPauseButton model.isPaused
-            , label []
-                [ text "xAngle: "
-                , input
-                    [ type_ "number"
-                    , value (String.fromFloat model.xAngle)
-                    , onInput XAngleChanged
-                    , step "0.01"
-                    ]
-                    []
+            [ div
+                [ style "display" "flex"
+                , style "flex-direction" "column"
+                , style "gap" "10px"
+                , style "padding" "10px"
                 ]
-            , label []
-                [ text "xSpeed: "
-                , input
-                    [ type_ "number"
-                    , value (String.fromFloat model.xSpeed)
-                    , onInput XSpeedChanged
-                    , step "0.01"
+                [ viewPauseButton model.isPaused
+                , label []
+                    [ text "xAngle: "
+                    , input
+                        [ type_ "number"
+                        , value (String.fromFloat model.xAngle)
+                        , onInput XAngleChanged
+                        , step "0.01"
+                        ]
+                        []
                     ]
-                    []
+                , label []
+                    [ text "xSpeed: "
+                    , input
+                        [ type_ "number"
+                        , value (String.fromFloat model.xSpeed)
+                        , onInput XSpeedChanged
+                        , step "0.01"
+                        ]
+                        []
+                    ]
                 ]
             ]
         , viewSvg model
