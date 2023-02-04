@@ -5,6 +5,7 @@ import Browser.Events
 import Html exposing (Html, button, div, input, label, node, span, text)
 import Html.Attributes exposing (step, style, type_, value)
 import Html.Events exposing (onClick, onInput)
+import Random
 import Round
 import Svg exposing (circle, g, svg)
 import Svg.Attributes exposing (cx, cy, fill, r)
@@ -21,6 +22,7 @@ main =
 
 type alias Model =
     { obj : Object
+    , objects : List Object
     , xRadius : Float
     , yRadius : Float
     , isPaused : Bool
@@ -34,11 +36,17 @@ init () =
     let
         elapsed =
             0
+
+        objects : List Object
+        objects =
+            Random.step (Random.list 0 randomObject) (Random.initialSeed 0)
+                |> Tuple.first
     in
     ( { obj =
             { xSpeed = turns 0.5745
             , ySpeed = turns 0.691
             }
+      , objects = objects
       , xRadius = 150
       , yRadius = 200
       , isPaused = False
@@ -53,6 +61,17 @@ type alias Object =
     { xSpeed : Float
     , ySpeed : Float
     }
+
+
+randomObject =
+    Random.map2 Object
+        randomSpeed
+        randomSpeed
+
+
+randomSpeed =
+    Random.float 0.1 0.9
+        |> Random.map turns
 
 
 type Msg
@@ -189,8 +208,9 @@ viewSvg model =
         , fill "white"
         ]
         [ g [ style "transform" "translate(50%,50%)" ]
-            [ viewObject model model.obj
-            ]
+            (viewObject model model.obj
+                :: List.map (viewObject model) model.objects
+            )
         ]
 
 
