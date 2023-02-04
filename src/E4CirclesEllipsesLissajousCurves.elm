@@ -43,6 +43,7 @@ type Msg
     = Tick Float
     | TogglePause
     | XAngleChanged String
+    | XSpeedChanged String
 
 
 subscriptions : Model -> Sub Msg
@@ -82,6 +83,14 @@ update msg model =
                 Nothing ->
                     ( model, Cmd.none )
 
+        XSpeedChanged str ->
+            case String.toFloat str of
+                Just xSpeed ->
+                    ( { model | xSpeed = xSpeed }, Cmd.none )
+
+                Nothing ->
+                    ( model, Cmd.none )
+
 
 view : Model -> Html Msg
 view model =
@@ -103,6 +112,16 @@ view model =
                     [ type_ "number"
                     , value (String.fromFloat model.xAngle)
                     , onInput XAngleChanged
+                    , step "0.01"
+                    ]
+                    []
+                ]
+            , label []
+                [ text "xSpeed: "
+                , input
+                    [ type_ "number"
+                    , value (String.fromFloat model.xSpeed)
+                    , onInput XSpeedChanged
                     , step "0.01"
                     ]
                     []
