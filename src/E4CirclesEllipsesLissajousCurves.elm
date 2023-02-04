@@ -2,8 +2,8 @@ module E4CirclesEllipsesLissajousCurves exposing (main)
 
 import Browser
 import Browser.Events
-import Html exposing (Html, button, div, text)
-import Html.Attributes exposing (style)
+import Html exposing (Html, button, div, input, label, text)
+import Html.Attributes exposing (style, type_, value)
 import Html.Events exposing (onClick)
 import Svg exposing (circle, foreignObject, g, svg)
 import Svg.Attributes exposing (cx, cy, fill, r)
@@ -81,8 +81,15 @@ view model =
         , style "width" "100vw"
         , style "height" "100vh"
         ]
-        [ div [ style "position" "fixed" ]
-            [ viewPauseButton model.isPaused ]
+        [ div
+            [ style "position" "fixed"
+            , style "color" "white"
+            , style "display" "flex"
+            , style "gap" "10px"
+            ]
+            [ viewPauseButton model.isPaused
+            , label [] [ text "num", input [ type_ "number", value "10" ] [] ]
+            ]
         , viewSvg model
         ]
 
