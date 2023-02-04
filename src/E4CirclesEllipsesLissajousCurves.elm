@@ -110,29 +110,24 @@ view model =
                 , style "padding" "10px"
                 ]
                 [ viewPauseButton model.isPaused
-                , label []
-                    [ text "xAngle: "
-                    , input
-                        [ type_ "number"
-                        , value (String.fromFloat model.xAngle)
-                        , onInput XAngleChanged
-                        , step "0.01"
-                        ]
-                        []
-                    ]
-                , label []
-                    [ text "xSpeed: "
-                    , input
-                        [ type_ "number"
-                        , value (String.fromFloat model.xSpeed)
-                        , onInput XSpeedChanged
-                        , step "0.01"
-                        ]
-                        []
-                    ]
+                , viewFloatInput "xAngle: " model.xAngle XAngleChanged
+                , viewFloatInput "xSpeed: " model.xSpeed XSpeedChanged
                 ]
             ]
         , viewSvg model
+        ]
+
+
+viewFloatInput labelText float msg =
+    label []
+        [ text labelText
+        , input
+            [ type_ "number"
+            , value (String.fromFloat float)
+            , onInput msg
+            , step "0.01"
+            ]
+            []
         ]
 
 
