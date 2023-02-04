@@ -44,6 +44,7 @@ type Msg
     | TogglePause
     | XAngleChanged String
     | XSpeedChanged String
+    | YSpeedChanged String
 
 
 subscriptions : Model -> Sub Msg
@@ -91,6 +92,14 @@ update msg model =
                 Nothing ->
                     ( model, Cmd.none )
 
+        YSpeedChanged str ->
+            case String.toFloat str of
+                Just ySpeed ->
+                    ( { model | ySpeed = ySpeed }, Cmd.none )
+
+                Nothing ->
+                    ( model, Cmd.none )
+
 
 view : Model -> Html Msg
 view model =
@@ -112,6 +121,7 @@ view model =
                 [ viewPauseButton model.isPaused
                 , viewFloatInput "xAngle: " model.xAngle XAngleChanged
                 , viewFloatInput "xSpeed: " model.xSpeed XSpeedChanged
+                , viewFloatInput "ySpeed: " model.ySpeed YSpeedChanged
                 ]
             ]
         , viewSvg model
