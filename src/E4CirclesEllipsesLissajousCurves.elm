@@ -20,12 +20,20 @@ main =
 type alias Model =
     { xAngle : Float
     , yAngle : Float
+    , xSpeed : Float
+    , ySpeed : Float
     }
 
 
 init : () -> ( Model, Cmd Msg )
 init () =
-    ( { xAngle = 0, yAngle = 0 }, Cmd.none )
+    ( { xAngle = 0
+      , yAngle = 0
+      , xSpeed = turns 0.9745
+      , ySpeed = turns 0.791
+      }
+    , Cmd.none
+    )
 
 
 type Msg
@@ -46,16 +54,10 @@ update msg model =
             let
                 ds =
                     millis / 1000
-
-                xSpeed =
-                    turns 0.9745
-
-                ySpeed =
-                    turns 0.791
             in
             ( { model
-                | xAngle = model.xAngle + (xSpeed * ds)
-                , yAngle = model.yAngle + (ySpeed * ds)
+                | xAngle = model.xAngle + (model.xSpeed * ds)
+                , yAngle = model.yAngle + (model.ySpeed * ds)
               }
             , Cmd.none
             )
