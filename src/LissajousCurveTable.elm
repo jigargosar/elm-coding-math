@@ -172,7 +172,7 @@ viewCell elapsed ( xIdx, yIdx ) =
             y =
                 cellRadius * sin yAngle
         in
-        g [ svgTransforms [ svgTranslateXY centerX centerY ] ]
+        cellContainer ( xIdx, yIdx )
             [ if xIdx == 0 || yIdx == 0 then
                 g []
                     [ circle
@@ -213,6 +213,17 @@ viewCell elapsed ( xIdx, yIdx ) =
                 ]
                 []
             ]
+
+
+cellContainer ( xIdx, yIdx ) =
+    let
+        centerX =
+            toFloat xIdx * cellWidth + (cellWidth / 2)
+
+        centerY =
+            toFloat yIdx * cellHeight + (cellHeight / 2)
+    in
+    g [ svgTransforms [ svgTranslateXY centerX centerY ] ]
 
 
 svgTransforms list =
