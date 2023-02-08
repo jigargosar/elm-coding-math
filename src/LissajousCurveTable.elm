@@ -106,7 +106,7 @@ update msg model =
 
 
 updateCurves elapsed =
-    Dict.map (\gp curve -> curvePointAt elapsed gp :: curve |> List.take 1000)
+    Dict.map (\gp curve -> curvePointAt elapsed gp :: curve |> List.take curvePointsToPreserve)
 
 
 view : Model -> Html Msg
@@ -192,7 +192,11 @@ dotRadius =
 
 
 baseSpeed =
-    turns 0.1
+    turns 0.2
+
+
+curvePointsToPreserve =
+    500
 
 
 viewCell elapsed ( xIdx, yIdx ) =
