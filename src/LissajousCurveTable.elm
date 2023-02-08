@@ -112,12 +112,18 @@ update msg model =
         Tick millis ->
             let
                 ds =
-                    millis / 1000
+                    -- capping delta is so very important, and always
+                    -- easy to forget
+                    atMost (1000 / 60) millis / 1000
 
                 elapsed =
                     model.elapsed + ds
             in
             ( { model | elapsed = elapsed, curves = updateCurves elapsed model.curves }, Cmd.none )
+
+
+atMost =
+    min
 
 
 updateCurves elapsed =
@@ -325,6 +331,9 @@ globalStyles =
     font-size: 16px;
     background-color: black;
     color: white;
+}
+body{
+    margin:0;
 }
 * {
     box-sizing: border-box;
