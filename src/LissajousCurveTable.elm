@@ -74,22 +74,7 @@ viewSvg model =
         , stroke "white"
         , strokeWidth "2"
         ]
-        (let
-            xIndices =
-                List.range 0 cols
-
-            yIndices =
-                List.range 0 rows
-
-            gridPoints =
-                List.concatMap
-                    (\y ->
-                        List.map (\x -> ( x, y )) xIndices
-                    )
-                    yIndices
-         in
-         List.map (viewCell model.elapsed) gridPoints
-        )
+        (List.map (viewCell model.elapsed) gridPoints)
 
 
 rows =
@@ -98,6 +83,14 @@ rows =
 
 cols =
     4
+
+
+gridPoints =
+    List.concatMap
+        (\y ->
+            List.map (\x -> ( x, y )) (List.range 0 cols)
+        )
+        (List.range 0 rows)
 
 
 cellWidth =
@@ -198,15 +191,19 @@ viewCell elapsed ( xIdx, yIdx ) =
 
               else
                 text ""
-            , circle
-                [ cx (String.fromFloat x)
-                , cy (String.fromFloat y)
-                , r (String.fromFloat dotRadius)
-                , stroke "none"
-                , fill "white"
-                ]
-                []
+            , viewDot x y
             ]
+
+
+viewDot x y =
+    circle
+        [ cx (String.fromFloat x)
+        , cy (String.fromFloat y)
+        , r (String.fromFloat dotRadius)
+        , stroke "none"
+        , fill "white"
+        ]
+        []
 
 
 cellContainer ( xIdx, yIdx ) =
