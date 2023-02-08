@@ -98,6 +98,10 @@ dotRadius =
     cellRadius * 0.2
 
 
+baseSpeed =
+    turns 0.25
+
+
 viewCell elapsed xIdx =
     let
         centerX =
@@ -106,8 +110,11 @@ viewCell elapsed xIdx =
         centerY =
             cellHeight / 2
 
+        xSpeed =
+            baseSpeed * toFloat xIdx
+
         xAngle =
-            turns -0.25
+            turns -0.25 + (xSpeed * elapsed)
 
         x =
             cellRadius * cos xAngle
