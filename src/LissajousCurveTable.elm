@@ -76,9 +76,16 @@ viewSvg model =
         ]
         (let
             indices =
-                List.range 1 4
+                List.range 0 4
+
+            gridPoints =
+                List.concatMap
+                    (\y ->
+                        List.map (\x -> ( x, y )) indices
+                    )
+                    indices
          in
-         List.map (viewCell model.elapsed) indices
+         List.map (viewCell model.elapsed) gridPoints
         )
 
 
@@ -95,47 +102,75 @@ cellRadius =
 
 
 dotRadius =
-    cellRadius * 0.2
+    cellRadius * 0.1
 
 
 baseSpeed =
     turns 0.25
 
 
-viewCell elapsed xIdx =
-    let
-        centerX =
-            toFloat xIdx * cellWidth + (cellWidth / 2)
+viewCell elapsed ( xIdx, yIdx ) =
+    if xIdx == 0 && yIdx == 0 then
+        text ""
 
-        centerY =
-            cellHeight / 2
+    else
+        let
+            centerX =
+                toFloat xIdx * cellWidth + (cellWidth / 2)
 
-        xSpeed =
-            baseSpeed * toFloat xIdx
+            centerY =
+                toFloat yIdx * cellHeight + (cellHeight / 2)
 
-        xAngle =
-            turns -0.25 + (xSpeed * elapsed)
+            xSpeed =
+                baseSpeed
+                    * toFloat
+                        (if xIdx == 0 then
+                            yIdx
 
-        x =
-            cellRadius * cos xAngle
+                         else
+                            xIdx
+                        )
 
-        y =
-            cellRadius * sin xAngle
-    in
-    g [ svgTransforms [ svgTranslateXY centerX centerY ] ]
-        [ circle
-            [ r (String.fromFloat cellRadius)
+            xAngle =
+                turns -0.25 + (xSpeed * elapsed)
+
+            ySpeed =
+                baseSpeed
+                    * toFloat
+                        (if yIdx == 0 then
+                            xIdx
+
+                         else
+                            yIdx
+                        )
+
+            yAngle =
+                turns -0.25 + (ySpeed * elapsed)
+
+            x =
+                cellRadius * cos xAngle
+
+            y =
+                cellRadius * sin yAngle
+        in
+        g [ svgTransforms [ svgTranslateXY centerX centerY ] ]
+            [ if xIdx == 0 || yIdx == 0 then
+                circle
+                    [ r (String.fromFloat cellRadius)
+                    ]
+                    []
+
+              else
+                text ""
+            , circle
+                [ cx (String.fromFloat x)
+                , cy (String.fromFloat y)
+                , r (String.fromFloat dotRadius)
+                , stroke "none"
+                , fill "white"
+                ]
+                []
             ]
-            []
-        , circle
-            [ cx (String.fromFloat x)
-            , cy (String.fromFloat y)
-            , r (String.fromFloat dotRadius)
-            , stroke "none"
-            , fill "white"
-            ]
-            []
-        ]
 
 
 svgTransforms list =
