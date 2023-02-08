@@ -6,7 +6,22 @@ import Dict exposing (Dict)
 import Html exposing (Html, div, node, text)
 import Html.Attributes exposing (style)
 import Svg exposing (circle, g, line, polyline, svg)
-import Svg.Attributes exposing (cx, cy, fill, points, r, stroke, strokeOpacity, strokeWidth, viewBox, x1, x2, y1, y2)
+import Svg.Attributes
+    exposing
+        ( cx
+        , cy
+        , fill
+        , points
+        , r
+        , stroke
+        , strokeOpacity
+        , strokeWidth
+        , viewBox
+        , x1
+        , x2
+        , y1
+        , y2
+        )
 
 
 main =
