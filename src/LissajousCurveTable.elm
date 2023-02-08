@@ -2,10 +2,11 @@ module LissajousCurveTable exposing (main)
 
 import Browser
 import Browser.Events
+import Dict exposing (Dict)
 import Html exposing (Html, div, node, text)
 import Html.Attributes exposing (style)
-import Svg exposing (circle, g, line, svg)
-import Svg.Attributes exposing (cx, cy, fill, r, stroke, strokeOpacity, strokeWidth, transform, viewBox, x1, x2, y1, y2)
+import Svg exposing (circle, g, line, polyline, svg)
+import Svg.Attributes exposing (cx, cy, fill, points, r, stroke, strokeOpacity, strokeWidth, transform, viewBox, x1, x2, y1, y2)
 
 
 main =
@@ -19,12 +20,64 @@ main =
 
 type alias Model =
     { elapsed : Float
+    , curves : Dict ( Int, Int ) (List ( Float, Float ))
     }
 
 
 init : () -> ( Model, Cmd Msg )
 init () =
-    ( { elapsed = 0 }, Cmd.none )
+    ( { elapsed = 0, curves = initialCurves }, Cmd.none )
+
+
+initialCurves : Dict ( Int, Int ) (List ( Float, Float ))
+initialCurves =
+    List.foldl (\gp -> Dict.insert gp (initCurve gp)) Dict.empty gridPoints
+
+
+initCurve : ( Int, Int ) -> List ( Float, Float )
+initCurve ( x, y ) =
+    if x == 0 && y == 0 then
+        []
+
+    else
+        [ curvePointAt 0 ( x, y ) ]
+
+
+curvePointAt elapsed ( xIdx, yIdx ) =
+    let
+        xSpeed =
+            baseSpeed
+                * toFloat
+                    (if xIdx == 0 then
+                        yIdx
+
+                     else
+                        xIdx
+                    )
+
+        xAngle =
+            turns -0.25 + (xSpeed * elapsed)
+
+        ySpeed =
+            baseSpeed
+                * toFloat
+                    (if yIdx == 0 then
+                        xIdx
+
+                     else
+                        yIdx
+                    )
+
+        yAngle =
+            turns -0.25 + (ySpeed * elapsed)
+
+        x =
+            cellRadius * cos xAngle
+
+        y =
+            cellRadius * sin yAngle
+    in
+    ( x, y )
 
 
 type Msg
@@ -45,8 +98,15 @@ update msg model =
             let
                 ds =
                     millis / 1000
+
+                elapsed =
+                    model.elapsed + ds
             in
-            ( { model | elapsed = model.elapsed + ds }, Cmd.none )
+            ( { model | elapsed = elapsed, curves = updateCurves elapsed model.curves }, Cmd.none )
+
+
+updateCurves elapsed =
+    Dict.map (\gp curve -> curvePointAt elapsed gp :: curve |> List.take 100)
 
 
 view : Model -> Html Msg
@@ -74,7 +134,21 @@ viewSvg model =
         , stroke "white"
         , strokeWidth "2"
         ]
-        (List.map (viewCell model.elapsed) gridPoints)
+        (List.map (viewCell model.elapsed) gridPoints
+            ++ List.map viewCurve (Dict.toList model.curves)
+        )
+
+
+viewCurve ( gp, pts ) =
+    let
+        ptToString ( x, y ) =
+            String.fromFloat x ++ "," ++ String.fromFloat y
+
+        ptsString =
+            List.map ptToString pts
+                |> String.join " "
+    in
+    cellContainer gp [ polyline [ points ptsString ] [] ]
 
 
 rows =
