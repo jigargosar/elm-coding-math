@@ -106,7 +106,7 @@ update msg model =
 
 
 updateCurves elapsed =
-    Dict.map (\gp curve -> curvePointAt elapsed gp :: curve |> List.take 100)
+    Dict.map (\gp curve -> curvePointAt elapsed gp :: curve |> List.take 1000)
 
 
 view : Model -> Html Msg
