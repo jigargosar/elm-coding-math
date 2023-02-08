@@ -134,12 +134,6 @@ viewCell elapsed ( xIdx, yIdx ) =
 
     else
         let
-            centerX =
-                toFloat xIdx * cellWidth + (cellWidth / 2)
-
-            centerY =
-                toFloat yIdx * cellHeight + (cellHeight / 2)
-
             xSpeed =
                 baseSpeed
                     * toFloat
