@@ -4,8 +4,8 @@ import Browser
 import Browser.Events
 import Html exposing (Html, div, node, text)
 import Html.Attributes exposing (style)
-import Svg exposing (circle, g, svg)
-import Svg.Attributes exposing (cx, cy, fill, r, stroke, strokeWidth, transform, viewBox)
+import Svg exposing (circle, g, line, svg)
+import Svg.Attributes exposing (cx, cy, fill, r, stroke, strokeOpacity, strokeWidth, transform, viewBox, x1, x2, y1, y2)
 
 
 main =
@@ -75,18 +75,29 @@ viewSvg model =
         , strokeWidth "2"
         ]
         (let
-            indices =
-                List.range 0 4
+            xIndices =
+                List.range 0 cols
+
+            yIndices =
+                List.range 0 rows
 
             gridPoints =
                 List.concatMap
                     (\y ->
-                        List.map (\x -> ( x, y )) indices
+                        List.map (\x -> ( x, y )) xIndices
                     )
-                    indices
+                    yIndices
          in
          List.map (viewCell model.elapsed) gridPoints
         )
+
+
+rows =
+    4
+
+
+cols =
+    4
 
 
 cellWidth =
@@ -95,6 +106,14 @@ cellWidth =
 
 cellHeight =
     100
+
+
+gridWidth =
+    (cols + 1) * cellWidth
+
+
+gridHeight =
+    (rows + 1) * cellWidth
 
 
 cellRadius =
@@ -106,7 +125,7 @@ dotRadius =
 
 
 baseSpeed =
-    turns 0.25
+    turns 0.1
 
 
 viewCell elapsed ( xIdx, yIdx ) =
@@ -155,10 +174,33 @@ viewCell elapsed ( xIdx, yIdx ) =
         in
         g [ svgTransforms [ svgTranslateXY centerX centerY ] ]
             [ if xIdx == 0 || yIdx == 0 then
-                circle
-                    [ r (String.fromFloat cellRadius)
+                g []
+                    [ circle
+                        [ r (String.fromFloat cellRadius)
+                        ]
+                        []
+                    , if xIdx == 0 then
+                        line
+                            [ x1 (String.fromFloat x)
+                            , y1 (String.fromFloat y)
+                            , x2 (String.fromFloat gridWidth)
+                            , y2 (String.fromFloat y)
+                            , strokeWidth "1"
+                            , strokeOpacity "0.2"
+                            ]
+                            []
+
+                      else
+                        line
+                            [ x1 (String.fromFloat x)
+                            , y1 (String.fromFloat y)
+                            , x2 (String.fromFloat x)
+                            , y2 (String.fromFloat gridHeight)
+                            , strokeWidth "1"
+                            , strokeOpacity "0.2"
+                            ]
+                            []
                     ]
-                    []
 
               else
                 text ""
