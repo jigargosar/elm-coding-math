@@ -4,8 +4,8 @@ import Browser
 import Browser.Events
 import Html exposing (Html, div, node, text)
 import Html.Attributes exposing (style)
-import Svg exposing (circle, svg)
-import Svg.Attributes exposing (cx, cy, fill, r, stroke, strokeWidth, viewBox)
+import Svg exposing (circle, g, svg)
+import Svg.Attributes exposing (cx, cy, fill, r, stroke, strokeWidth, transform, viewBox)
 
 
 main =
@@ -94,6 +94,10 @@ cellRadius =
     cellWidth * 0.45
 
 
+dotRadius =
+    cellRadius * 0.2
+
+
 viewCell elapsed xIdx =
     let
         centerX =
@@ -101,13 +105,38 @@ viewCell elapsed xIdx =
 
         centerY =
             cellHeight / 2
+
+        xAngle =
+            turns -0.25
+
+        x =
+            cellRadius * cos xAngle
+
+        y =
+            cellRadius * sin xAngle
     in
-    circle
-        [ cx (String.fromFloat centerX)
-        , cy (String.fromFloat centerY)
-        , r (String.fromFloat cellRadius)
+    g [ svgTransforms [ svgTranslateXY centerX centerY ] ]
+        [ circle
+            [ r (String.fromFloat cellRadius)
+            ]
+            []
+        , circle
+            [ cx (String.fromFloat x)
+            , cy (String.fromFloat y)
+            , r (String.fromFloat dotRadius)
+            , stroke "none"
+            , fill "white"
+            ]
+            []
         ]
-        []
+
+
+svgTransforms list =
+    Svg.Attributes.transform (String.join " " list)
+
+
+svgTranslateXY x y =
+    "translate(" ++ String.fromFloat x ++ "," ++ String.fromFloat y ++ ")"
 
 
 globalStyles =
