@@ -96,15 +96,15 @@ cellRadius =
 
 viewCell elapsed xIdx =
     let
-        x =
+        centerX =
             toFloat xIdx * cellWidth + (cellWidth / 2)
 
-        y =
+        centerY =
             cellHeight / 2
     in
     circle
-        [ cx (String.fromFloat x)
-        , cy (String.fromFloat y)
+        [ cx (String.fromFloat centerX)
+        , cy (String.fromFloat centerY)
         , r (String.fromFloat cellRadius)
         ]
         []
