@@ -105,6 +105,7 @@ init () =
 initialCurves : Dict ( Int, Int ) (List ( Float, Float ))
 initialCurves =
     List.foldl (\gp -> Dict.insert gp (initCurve gp)) Dict.empty gridPoints
+        |> Dict.filter (\( x, y ) _ -> x /= 0 && y /= 0)
 
 
 initCurve : ( Int, Int ) -> List ( Float, Float )
@@ -216,6 +217,34 @@ viewSvg model =
         )
 
 
+gpToColor : ( Int, Int ) -> String
+gpToColor ( x, y ) =
+    if x == 0 || y == 0 then
+        let
+            idx =
+                if x == 0 then
+                    y
+
+                else
+                    x
+        in
+        colorList |> List.drop idx |> List.head |> Maybe.withDefault "white"
+
+    else if x == y then
+        colorList |> List.drop x |> List.head |> Maybe.withDefault "white"
+
+    else
+        "white"
+
+
+
+-- https://www.w3schools.com/colors/colors_groups.asp
+
+
+colorList =
+    [ "white", "gold", "limegreen", "dodgerblue", "deeppink" ]
+
+
 viewCurve ( gp, pts ) =
     let
         ptToString ( x, y ) =
@@ -238,6 +267,7 @@ viewCell elapsed ( xIdx, yIdx ) =
             g []
                 [ circle
                     [ r (String.fromFloat cellRadius)
+                    , stroke (gpToColor ( xIdx, yIdx ))
                     ]
                     []
                 , if xIdx == 0 then
