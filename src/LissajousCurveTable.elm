@@ -209,7 +209,7 @@ viewSvg model =
         , style "max-width" "100%"
         , style "max-height" "100%"
         , fill "none"
-        , stroke "white"
+        , stroke white
         , strokeWidth "2"
         ]
         (List.map (viewCell model.elapsed) gridPoints
@@ -221,7 +221,7 @@ colorAt : ( Int, Int ) -> String
 colorAt ( x, y ) =
     colorGrid
         |> listGetOr [] y
-        |> listGetOr "white" x
+        |> listGetOr white x
 
 
 listGetOr default i =
@@ -233,12 +233,32 @@ listGetOr default i =
 
 
 colorGrid =
-    [ [ "white", "gold", "limegreen", "dodgerblue", "deeppink" ]
-    , [ "white", "gold", "limegreen", "dodgerblue", "deeppink" ]
-    , [ "white", "gold", "limegreen", "dodgerblue", "deeppink" ]
-    , [ "white", "gold", "limegreen", "dodgerblue", "deeppink" ]
-    , [ "white", "gold", "limegreen", "dodgerblue", "deeppink" ]
+    [ [ white, yellow, green, blue, pink ]
+    , [ yellow, yellow, green, blue, pink ]
+    , [ green, yellow, green, blue, pink ]
+    , [ blue, yellow, green, blue, pink ]
+    , [ pink, yellow, green, blue, pink ]
     ]
+
+
+white =
+    "white"
+
+
+yellow =
+    "gold"
+
+
+green =
+    "limegreen"
+
+
+blue =
+    "dodgerblue"
+
+
+pink =
+    "deeppink"
 
 
 viewCurve ( gp, pts ) =
@@ -307,7 +327,7 @@ viewDot x y =
         , cy (String.fromFloat y)
         , r (String.fromFloat dotRadius)
         , stroke "none"
-        , fill "white"
+        , fill white
         ]
         []
 
