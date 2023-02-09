@@ -33,6 +33,63 @@ main =
         }
 
 
+
+-- CONFIG
+
+
+rows =
+    4
+
+
+cols =
+    4
+
+
+gridPoints =
+    List.concatMap
+        (\y ->
+            List.map (\x -> ( x, y )) (List.range 0 cols)
+        )
+        (List.range 0 rows)
+
+
+cellWidth =
+    100
+
+
+cellHeight =
+    100
+
+
+gridWidth =
+    (cols + 1) * cellWidth
+
+
+gridHeight =
+    (rows + 1) * cellWidth
+
+
+cellRadius =
+    cellWidth * 0.45
+
+
+dotRadius =
+    cellRadius * 0.1
+
+
+baseSpeed =
+    turns 0.2
+
+
+curvePointsToPreserve =
+    -- this is a strange value, works differently on ellie and locally :?
+    600
+
+
+
+-- MODEL
+
+
 type alias Model =
     { elapsed : Float
     , curves : Dict ( Int, Int ) (List ( Float, Float ))
@@ -172,55 +229,6 @@ viewCurve ( gp, pts ) =
                 |> String.join " "
     in
     cellContainer gp [ polyline [ points ptsString ] [] ]
-
-
-rows =
-    4
-
-
-cols =
-    4
-
-
-gridPoints =
-    List.concatMap
-        (\y ->
-            List.map (\x -> ( x, y )) (List.range 0 cols)
-        )
-        (List.range 0 rows)
-
-
-cellWidth =
-    100
-
-
-cellHeight =
-    100
-
-
-gridWidth =
-    (cols + 1) * cellWidth
-
-
-gridHeight =
-    (rows + 1) * cellWidth
-
-
-cellRadius =
-    cellWidth * 0.45
-
-
-dotRadius =
-    cellRadius * 0.1
-
-
-baseSpeed =
-    turns 0.2
-
-
-curvePointsToPreserve =
-    -- this is a strange value, works differently on ellie and locally :?
-    600
 
 
 viewCell elapsed ( xIdx, yIdx ) =
