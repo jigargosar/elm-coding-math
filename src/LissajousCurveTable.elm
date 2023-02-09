@@ -58,6 +58,7 @@ initCurve ( xIdx, yIdx ) =
         [ curvePointAt 0 ( xIdx, yIdx ) ]
 
 
+curvePointAt : Float -> ( Int, Int ) -> ( Float, Float )
 curvePointAt elapsed ( xIdx, yIdx ) =
     let
         xSpeed =
@@ -95,6 +96,7 @@ curvePointAt elapsed ( xIdx, yIdx ) =
     ( x, y )
 
 
+updateCurves : Float -> Dict ( Int, Int ) (List ( Float, Float )) -> Dict ( Int, Int ) (List ( Float, Float ))
 updateCurves elapsed =
     Dict.map (\gp curve -> curvePointAt elapsed gp :: curve |> List.take curvePointsToPreserve)
 
