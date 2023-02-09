@@ -51,6 +51,7 @@ gridPoints =
             List.map (\x -> ( x, y )) (List.range 0 cols)
         )
         (List.range 0 rows)
+        |> List.drop 1
 
 
 cellWidth =
@@ -108,11 +109,7 @@ initialCurves =
 
 initCurve : ( Int, Int ) -> List ( Float, Float )
 initCurve ( xIdx, yIdx ) =
-    if xIdx == 0 || yIdx == 0 then
-        []
-
-    else
-        [ curvePointAt 0 ( xIdx, yIdx ) ]
+    [ curvePointAt 0 ( xIdx, yIdx ) ]
 
 
 curvePointAt : Float -> ( Int, Int ) -> ( Float, Float )
@@ -232,48 +229,44 @@ viewCurve ( gp, pts ) =
 
 
 viewCell elapsed ( xIdx, yIdx ) =
-    if xIdx == 0 && yIdx == 0 then
-        text ""
-
-    else
-        let
-            ( x, y ) =
-                curvePointAt elapsed ( xIdx, yIdx )
-        in
-        cellContainer ( xIdx, yIdx )
-            [ if xIdx == 0 || yIdx == 0 then
-                g []
-                    [ circle
-                        [ r (String.fromFloat cellRadius)
+    let
+        ( x, y ) =
+            curvePointAt elapsed ( xIdx, yIdx )
+    in
+    cellContainer ( xIdx, yIdx )
+        [ if xIdx == 0 || yIdx == 0 then
+            g []
+                [ circle
+                    [ r (String.fromFloat cellRadius)
+                    ]
+                    []
+                , if xIdx == 0 then
+                    line
+                        [ x1 (String.fromFloat x)
+                        , y1 (String.fromFloat y)
+                        , x2 (String.fromFloat gridWidth)
+                        , y2 (String.fromFloat y)
+                        , strokeWidth "1"
+                        , strokeOpacity "0.2"
                         ]
                         []
-                    , if xIdx == 0 then
-                        line
-                            [ x1 (String.fromFloat x)
-                            , y1 (String.fromFloat y)
-                            , x2 (String.fromFloat gridWidth)
-                            , y2 (String.fromFloat y)
-                            , strokeWidth "1"
-                            , strokeOpacity "0.2"
-                            ]
-                            []
 
-                      else
-                        line
-                            [ x1 (String.fromFloat x)
-                            , y1 (String.fromFloat y)
-                            , x2 (String.fromFloat x)
-                            , y2 (String.fromFloat gridHeight)
-                            , strokeWidth "1"
-                            , strokeOpacity "0.2"
-                            ]
-                            []
-                    ]
+                  else
+                    line
+                        [ x1 (String.fromFloat x)
+                        , y1 (String.fromFloat y)
+                        , x2 (String.fromFloat x)
+                        , y2 (String.fromFloat gridHeight)
+                        , strokeWidth "1"
+                        , strokeOpacity "0.2"
+                        ]
+                        []
+                ]
 
-              else
-                text ""
-            , viewDot x y
-            ]
+          else
+            text ""
+        , viewDot x y
+        ]
 
 
 viewDot x y =
