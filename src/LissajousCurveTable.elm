@@ -51,7 +51,7 @@ initialCurves =
 
 initCurve : ( Int, Int ) -> List ( Float, Float )
 initCurve ( x, y ) =
-    if x == 0 && y == 0 then
+    if x == 0 || y == 0 then
         []
 
     else
@@ -217,7 +217,8 @@ baseSpeed =
 
 
 curvePointsToPreserve =
-    500
+    -- this is a strange value, works differently on ellie and locally :?
+    600
 
 
 viewCell elapsed ( xIdx, yIdx ) =
