@@ -237,37 +237,8 @@ viewCell elapsed ( xIdx, yIdx ) =
 
     else
         let
-            xSpeed =
-                baseSpeed
-                    * toFloat
-                        (if xIdx == 0 then
-                            yIdx
-
-                         else
-                            xIdx
-                        )
-
-            xAngle =
-                turns -0.25 + (xSpeed * elapsed)
-
-            ySpeed =
-                baseSpeed
-                    * toFloat
-                        (if yIdx == 0 then
-                            xIdx
-
-                         else
-                            yIdx
-                        )
-
-            yAngle =
-                turns -0.25 + (ySpeed * elapsed)
-
-            x =
-                cellRadius * cos xAngle
-
-            y =
-                cellRadius * sin yAngle
+            ( x, y ) =
+                curvePointAt elapsed ( xIdx, yIdx )
         in
         cellContainer ( xIdx, yIdx )
             [ if xIdx == 0 || yIdx == 0 then
