@@ -50,12 +50,12 @@ initialCurves =
 
 
 initCurve : ( Int, Int ) -> List ( Float, Float )
-initCurve ( x, y ) =
-    if x == 0 || y == 0 then
+initCurve ( xIdx, yIdx ) =
+    if xIdx == 0 || yIdx == 0 then
         []
 
     else
-        [ curvePointAt 0 ( x, y ) ]
+        [ curvePointAt 0 ( xIdx, yIdx ) ]
 
 
 curvePointAt elapsed ( xIdx, yIdx ) =
