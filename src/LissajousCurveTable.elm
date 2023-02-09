@@ -217,32 +217,28 @@ viewSvg model =
         )
 
 
-gpToColor : ( Int, Int ) -> String
-gpToColor ( x, y ) =
-    if x == 0 || y == 0 then
-        let
-            idx =
-                if x == 0 then
-                    y
+colorAt : ( Int, Int ) -> String
+colorAt ( x, y ) =
+    colorGrid
+        |> listGetOr [] y
+        |> listGetOr "white" x
 
-                else
-                    x
-        in
-        colorList |> List.drop idx |> List.head |> Maybe.withDefault "white"
 
-    else if x == y then
-        colorList |> List.drop x |> List.head |> Maybe.withDefault "white"
-
-    else
-        "white"
+listGetOr default i =
+    List.drop i >> List.head >> Maybe.withDefault default
 
 
 
 -- https://www.w3schools.com/colors/colors_groups.asp
 
 
-colorList =
-    [ "white", "gold", "limegreen", "dodgerblue", "deeppink" ]
+colorGrid =
+    [ [ "white", "gold", "limegreen", "dodgerblue", "deeppink" ]
+    , [ "white", "gold", "limegreen", "dodgerblue", "deeppink" ]
+    , [ "white", "gold", "limegreen", "dodgerblue", "deeppink" ]
+    , [ "white", "gold", "limegreen", "dodgerblue", "deeppink" ]
+    , [ "white", "gold", "limegreen", "dodgerblue", "deeppink" ]
+    ]
 
 
 viewCurve ( gp, pts ) =
@@ -254,7 +250,13 @@ viewCurve ( gp, pts ) =
             List.map ptToString pts
                 |> String.join " "
     in
-    cellContainer gp [ polyline [ points ptsString ] [] ]
+    cellContainer gp
+        [ polyline
+            [ points ptsString
+            , stroke (colorAt gp)
+            ]
+            []
+        ]
 
 
 viewCell elapsed ( xIdx, yIdx ) =
@@ -267,7 +269,7 @@ viewCell elapsed ( xIdx, yIdx ) =
             g []
                 [ circle
                     [ r (String.fromFloat cellRadius)
-                    , stroke (gpToColor ( xIdx, yIdx ))
+                    , stroke (colorAt ( xIdx, yIdx ))
                     ]
                     []
                 , if xIdx == 0 then
