@@ -230,14 +230,15 @@ listGetOr default i =
 
 
 -- https://www.w3schools.com/colors/colors_groups.asp
+-- https://www.w3schools.com/colors/colors_mixer.asp
 
 
 colorGrid =
     [ [ white, yellow, green, blue, pink ]
-    , [ yellow, yellow, green, blue, pink ]
-    , [ green, yellow, green, blue, pink ]
-    , [ blue, yellow, green, blue, pink ]
-    , [ pink, yellow, green, blue, pink ]
+    , [ yellow, yellow, yloGrn, bluYlo, pnkYlo ]
+    , [ green, yloGrn, green, grnBlu, pnkGrn ]
+    , [ blue, bluYlo, grnBlu, blue, pnkBlu ]
+    , [ pink, pnkYlo, pnkGrn, pnkBlu, pink ]
     ]
 
 
@@ -259,6 +260,30 @@ blue =
 
 pink =
     "deeppink"
+
+
+yloGrn =
+    "YellowGreen"
+
+
+bluYlo =
+    "#83b08c"
+
+
+pnkYlo =
+    "orange"
+
+
+grnBlu =
+    "#28ae98"
+
+
+pnkGrn =
+    "#987062"
+
+
+pnkBlu =
+    "#8e52c9"
 
 
 viewCurve ( gp, pts ) =
