@@ -95,6 +95,10 @@ curvePointAt elapsed ( xIdx, yIdx ) =
     ( x, y )
 
 
+updateCurves elapsed =
+    Dict.map (\gp curve -> curvePointAt elapsed gp :: curve |> List.take curvePointsToPreserve)
+
+
 type Msg
     = Tick Float
 
@@ -124,10 +128,6 @@ update msg model =
 
 atMost =
     min
-
-
-updateCurves elapsed =
-    Dict.map (\gp curve -> curvePointAt elapsed gp :: curve |> List.take curvePointsToPreserve)
 
 
 view : Model -> Html Msg
